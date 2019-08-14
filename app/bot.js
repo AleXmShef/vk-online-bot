@@ -8,10 +8,11 @@ const bot = new TelegramBot(token, {
     polling: true
 });
 
+bot.sendMessage(272562481, "Bot is now online!");
+
 bot.onText(/Register new user/, async (msg) => {
     await bot.sendMessage(msg.chat.id, messages.askForUserIdMessage);
 });
-
 
 bot.onText(/Reset database/, async (msg) => {
    //TODO: notify all users
@@ -74,5 +75,5 @@ setInterval(async () => {
 setInterval(async () => {
     const resp = await axios.get("https://vk-online-bot.herokuapp.com/");
     console.log("Requesting server: ");
-    console.log(resp.data);
+    //console.log(resp.data);
 }, 120000);
