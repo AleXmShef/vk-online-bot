@@ -1,1 +1,2 @@
-dvkjndkfnv
+require('./app/bot.js')
+
