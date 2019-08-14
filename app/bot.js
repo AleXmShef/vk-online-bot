@@ -1,5 +1,6 @@
 const messages = require('./messages');
 const controllers = require('./controllers');
+const axios = require('axios');
 
 const TelegramBot = require('node-telegram-bot-api');
 const token = "739757471:AAE4U_spx1jGqAoeMMbKbPJGg9RExmX34VI";
@@ -69,3 +70,9 @@ const onlineNotification = async (chatID, userName) => {
 setInterval(async () => {
     await controllers.saveDatabase();
 }, 60000);
+
+setInterval(async () => {
+    const resp = await axios.get("https://vk-online-bot.herokuapp.com/");
+    console.log("REquesting server: ");
+    console.log(resp);
+}, 120000);
