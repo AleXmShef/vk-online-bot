@@ -29,7 +29,9 @@ if(!Database) {
 async function saveDatabase() {
     if (Database.size > 0) {
         const jsonDatabase = await JSON.stringify(...Database);
-        await fs.writeFile('database.json', jsonDatabase);
+        await fs.writeFile('database.json', jsonDatabase, (err) => {
+            console.log(err);
+        });
         console.log("Saved database");
     }
 }
