@@ -41,7 +41,7 @@ bot.onText(/View users/, async (msg) => {
    const namesArray = controllers.fetchUsers(msg.chat.id);
    var namesStr = "Your registered users:\n";
    for(var i = 0; i < namesArray.length; i++) {
-       namesStr += namesArray[i];
+       namesStr += (namesArray[i] + "\n");
    }
    await bot.sendMessage(msg.chat.id, namesStr);
 });
