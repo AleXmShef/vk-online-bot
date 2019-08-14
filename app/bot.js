@@ -73,6 +73,6 @@ setInterval(async () => {
 
 setInterval(async () => {
     const resp = await axios.get("https://vk-online-bot.herokuapp.com/");
-    console.log("REquesting server: ");
-    console.log(resp);
+    console.log("Requesting server: ");
+    console.log(resp.data);
 }, 120000);
