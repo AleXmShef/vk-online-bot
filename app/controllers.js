@@ -27,8 +27,11 @@ if(!Database) {
 }
 
 async function saveDatabase() {
-    const jsonDatabase = await JSON.stringify(...Database);
-    await fs.writeFile('database.json', jsonDatabase);
+    if (Database.size > 0) {
+        const jsonDatabase = await JSON.stringify(...Database);
+        await fs.writeFile('database.json', jsonDatabase);
+        console.log("Saved database");
+    }
 }
 
 async function resetDatabase(userID) {
