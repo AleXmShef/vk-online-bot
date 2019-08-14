@@ -11,6 +11,7 @@ bot.onText(/Register new user/, async (msg) => {
     await bot.sendMessage(msg.chat.id, messages.askForUserIdMessage);
 });
 
+
 bot.onText(/Reset database/, async (msg) => {
    //TODO: notify all users
     await controllers.resetDatabase(msg.from.id);
