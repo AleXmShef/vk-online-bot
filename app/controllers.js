@@ -4,6 +4,7 @@ const adminChatID = "272562481";
 
 
 var Database;
+console.log(`Current directory: ${process.cwd()}`);
 
 async function readDatabase() {
     console.log("Recreating databasae:");
