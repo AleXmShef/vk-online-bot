@@ -1,11 +1,14 @@
 const services = require('./services');
 const fs = require('fs');
+const adminChatID = "272562481";
+
 
 var Database;
-if(!Database) {
+
+async function readDatabase() {
     console.log("Recreating databasae:");
     if(fs.existsSync('database.json')) {
-        const jsonDatabase = fs.readFileSync('database.json', 'utf8', (err, data) => {
+        const jsonDatabase = await fs.readFileSync('database.json', 'utf8', (err, data) => {
             return data;
         });
         const iterableDatabase = JSON.parse(jsonDatabase);
@@ -19,9 +22,20 @@ if(!Database) {
     }
 }
 
+if(!Database) {
+    readDatabase();
+}
+
 async function saveDatabase() {
     const jsonDatabase = await JSON.stringify(...Database);
     await fs.writeFile('database.json', jsonDatabase);
+}
+
+async function resetDatabase(userID) {
+    if(userID.toString() === adminChatID) {
+        fs.unlinkSync('database.json');
+        await readDatabase();
+    }
 }
 
 async function registerNewUser(curUser, targetUserLink) {
@@ -60,8 +74,13 @@ async function registerNewUser(curUser, targetUserLink) {
     }
 }
 
-async function deleteExistingUser(userName) {
-
+async function deleteExistingUser(userID, first_name, last_name) {
+    for(var i = 0; i < Database.get(userID.toString()).length; i++) {
+        if (Database.get(userID.toString())[i].first_name === first_name && Database.get(userID.toString())[i].last_name === last_name) {
+            Database.get(userID.toString()).splice(i, 1);
+            break;
+        }
+    }
 }
 
 async function checkForUpdates(callback) {
@@ -81,9 +100,21 @@ async function checkForUpdates(callback) {
     })
 }
 
+function fetchUsers(chatID) {
+    var namesArray = new Array();
+    const stringChatID = chatID.toString();
+    console.log(stringChatID);
+    for(var i = 0; i < Database.get(stringChatID).length; i++) {
+        namesArray.push(Database.get(stringChatID)[i].first_name + " " + Database.get(stringChatID)[i].last_name);
+    }
+    return namesArray;
+}
+
 module.exports = {
     registerNewUser,
     checkForUpdates,
     saveDatabase,
-    deleteExistingUser
+    deleteExistingUser,
+    fetchUsers,
+    resetDatabase
 };
