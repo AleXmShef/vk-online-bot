@@ -1,14 +1,14 @@
 const mainMenuKeyboard = {
     "reply_markup": {
-        "keyboard": [["Add new person", "Remove existing person"], ["View statistics"], ["View your persons"]],
+        "keyboard": [["Add new person", "Remove person"], ["View statistics"], ["View your persons"]],
         "one_time_keyboard": false
     }};
 
 const mainMenuMessage = "Choose action";
 
-const askForUserIdMessage = "Please enter /add {Person's ID from vk.com}";
+const askForUserIdMessage = "Please enter \n /add {person's ID from vk.com}";
 
-const askForUserCredentialsMessage = "Please enter /remove {Person's Name} {Person's Surname}";
+const askForUserCredentialsMessage = "Please enter \n /remove {person's name} {person's surname}";
 
 const successfulUserRegistrationMessage = "Successfully added new person to the watch list!";
 
