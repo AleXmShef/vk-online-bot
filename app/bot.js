@@ -10,15 +10,33 @@ const bot = new TelegramBot(token, {
 
 bot.sendMessage(272562481, "Bot is now online!");
 
-bot.onText(/Register new user/, async (msg) => {
+bot.onText(/Add new person/, async (msg) => {
     await bot.sendMessage(msg.chat.id, messages.askForUserIdMessage);
 });
 
-bot.onText(/\/start/, async (msg) => {
+bot.onText(/emove existing person/, async (msg) => {
+    await bot.sendMessage(msg.chat.id, messages.askForUserCredentialsMessage);
+});
+
+bot.onText(/View your persons/, async (msg) => {
+    const namesArray = await controllers.fetchUsers(msg.chat.id);
+    var namesStr = "Persons inside your watch list:\n";
+    for(var i = 0; i < namesArray.length; i++) {
+        namesStr += (namesArray[i] + "\n");
+    }
+    await bot.sendMessage(msg.chat.id, namesStr);
+});
+
+bot.onText(/View statistics/, async (msg) => {
+    await bot.sendMessage(msg.chat.id, messages.askForUserStatisticsMessage);
+});
+
+
+bot.onText(/To Main Menu/, async (msg) => {
     await bot.sendMessage(msg.chat.id, messages.mainMenuMessage, messages.mainMenuKeyboard);
 });
 
-bot.onText(/To Main Menu/, async (msg) => {
+bot.onText(/\/start/, async (msg) => {
     await bot.sendMessage(msg.chat.id, messages.mainMenuMessage, messages.mainMenuKeyboard);
 });
 
@@ -31,21 +49,13 @@ bot.onText(/\/add (.+)/, async (msg, match) => {
     await bot.sendMessage(msg.chat.id, messages.successfulUserRegistrationMessage);
 });
 
-bot.onText(/Delete existing user/, async (msg) => {
-    await bot.sendMessage(msg.chat.id, messages.askForUserCredentialsMessage);
-});
-
-bot.onText(/View users/, async (msg) => {
-   const namesArray = await controllers.fetchUsers(msg.chat.id);
-   var namesStr = "Persons inside your watch list:\n";
-   for(var i = 0; i < namesArray.length; i++) {
-       namesStr += (namesArray[i] + "\n");
-   }
-   await bot.sendMessage(msg.chat.id, namesStr);
-});
-
-bot.onText(/Get statistics/, async (msg) => {
-    await bot.sendMessage(msg.chat.id, messages.askForUserStatisticsMessage);
+bot.onText(/\/view/, async (msg) => {
+    const namesArray = await controllers.fetchUsers(msg.chat.id);
+    var namesStr = "Persons inside your watch list:\n";
+    for(var i = 0; i < namesArray.length; i++) {
+        namesStr += (namesArray[i] + "\n");
+    }
+    await bot.sendMessage(msg.chat.id, namesStr);
 });
 
 bot.onText(/\/remove (.+) (.+)/, async (msg, match) => {
@@ -54,6 +64,8 @@ bot.onText(/\/remove (.+) (.+)/, async (msg, match) => {
    await controllers.deleteExistingUser(msg.from.id, first_name, last_name);
    await bot.sendMessage(msg.chat.id, messages.successfulUserRemovalMessage);
 });
+
+
 
 setInterval(async () => {
     await controllers.checkForUpdates(onlineNotification);

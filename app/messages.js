@@ -1,6 +1,6 @@
 const mainMenuKeyboard = {
     "reply_markup": {
-        "keyboard": [["Add new person", "Delete existing person"], ["Get statistics"], ["View your persons"]],
+        "keyboard": [["Add new person", "Remove existing person"], ["View statistics"], ["View your persons"]],
         "one_time_keyboard": false
     }};
 
