@@ -89,6 +89,9 @@ async function fetchUsers(chatID) {
     let namesArray = [];
     const stringChatID = chatID.toString();
     const user = await User.findOne({userid: stringChatID});
+    if(!user) {
+        throw {message: 'No user'};
+    }
     for(let i = 0; i < user.spectatedArray.length; i++) {
         namesArray.push(user.spectatedArray[i].first_name.toString() + " " + user.spectatedArray[i].last_name.toString());
     }

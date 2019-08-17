@@ -35,7 +35,6 @@ bot.onText(/View your persons/, async (msg) => {
             await bot.sendMessage(msg.chat.id, messages.noUsersInWatchListMessage);
         else
             await bot.sendMessage(msg.chat.id, messages.genericErrorMessage);
-
     }
 });
 
@@ -75,16 +74,23 @@ bot.onText(/\/add (.+)/, async (msg, match) => {
 });
 
 bot.onText(/\/view/, async (msg) => {
-    const namesArray = await controllers.fetchUsers(msg.chat.id);
-    if(!namesArray) {
-        await bot.sendMessage(msg.chat.id, messages.noUsersInWatchListMessage);
-        return -1;
+    try {
+        const namesArray = await controllers.fetchUsers(msg.chat.id);
+        if(!namesArray) {
+            await bot.sendMessage(msg.chat.id, messages.noUsersInWatchListMessage);
+            return -1;
+        }
+        let namesStr = "Persons inside your watch list:\n";
+        for(let i = 0; i < namesArray.length; i++) {
+            namesStr += (namesArray[i] + "\n");
+        }
+        await bot.sendMessage(msg.chat.id, namesStr);
+    } catch(err) {
+        if(err.message === 'No user')
+            await bot.sendMessage(msg.chat.id, messages.noUsersInWatchListMessage);
+        else
+            await bot.sendMessage(msg.chat.id, messages.genericErrorMessage);
     }
-    let namesStr = "Persons inside your watch list:\n";
-    for(let i = 0; i < namesArray.length; i++) {
-        namesStr += (namesArray[i] + "\n");
-    }
-    await bot.sendMessage(msg.chat.id, namesStr);
 });
 
 bot.onText(/\/remove (.+) (.+)/, async (msg, match) => {
