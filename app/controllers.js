@@ -3,13 +3,17 @@ const User = require('./User');
 const adminChatID = "272562481";
 
 async function registerNewUser(curUser, targetUserLink) {
-
     const userID = await services.getUserID(targetUserLink);
     if(!userID) {
-        return 0;
+        console.log("throwing error");
+        throw {message: "No user"};
     }
 
     const vkUser = await services.getUserData(userID);
+    if(!vkUser || typeof vkUser === "undefined") {
+        console.log("throwing error");
+        throw {message: "No user"};
+    }
     console.log("registering new user: ");
     console.log(vkUser);
 
@@ -29,24 +33,32 @@ async function registerNewUser(curUser, targetUserLink) {
             if(alreadyExists.spectatedArray[i].userid === vkUser.id)
                 alreadyExists2 = 1;
         }
-        if(!alreadyExists2) {
-            let online_data = [];
-            online_data.push({time: Date.now(), is_online: vkUser.online});
-            alreadyExists.spectatedArray.push({userid: vkUser.id, first_name: vkUser.first_name, last_name: vkUser.last_name, online_data: online_data});
-            await alreadyExists.save();
+        if(alreadyExists2 === 1) {
+            console.log("throwing error");
+            throw {message: "User already exists"};
         }
+        let online_data = [];
+        online_data.push({time: Date.now(), is_online: vkUser.online});
+        alreadyExists.spectatedArray.push({userid: vkUser.id, first_name: vkUser.first_name, last_name: vkUser.last_name, online_data: online_data});
+        await alreadyExists.save();
     }
 }
 
 async function deleteExistingUser(userID, first_name, last_name) {
     console.log("deleting user: " + first_name + " " + last_name);
     const user = await User.findOne({userid: userID.toString()});
+    let success = 0;
     for(let i = 0; i < user.spectatedArray.length; i++) {
         if (user.spectatedArray[i].first_name === first_name && user.spectatedArray[i].last_name === last_name) {
             user.spectatedArray.splice(i, 1);
             await user.save();
+            success = 1;
             break;
         }
+    }
+    if(!success) {
+        console.log("throwing error");
+        throw {message: 'No user'};
     }
 }
 

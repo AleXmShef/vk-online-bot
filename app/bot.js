@@ -14,14 +14,18 @@ bot.onText(/Add new person/, async (msg) => {
     await bot.sendMessage(msg.chat.id, messages.askForUserIdMessage);
 });
 
-bot.onText(/emove existing person/, async (msg) => {
+bot.onText(/Remove person/, async (msg) => {
     await bot.sendMessage(msg.chat.id, messages.askForUserCredentialsMessage);
 });
 
 bot.onText(/View your persons/, async (msg) => {
     const namesArray = await controllers.fetchUsers(msg.chat.id);
-    var namesStr = "Persons inside your watch list:\n";
-    for(var i = 0; i < namesArray.length; i++) {
+    if(!namesArray) {
+        await bot.sendMessage(msg.chat.id, messages.noUsersInWatchListMessage);
+        return -1;
+    }
+    let namesStr = "Persons inside your watch list:\n";
+    for(let i = 0; i < namesArray.length; i++) {
         namesStr += (namesArray[i] + "\n");
     }
     await bot.sendMessage(msg.chat.id, namesStr);
@@ -46,17 +50,30 @@ bot.onText(/\/start/, async (msg) => {
 
 bot.onText(/\/add (.+)/, async (msg, match) => {
     userID = match[1];
-    if (!controllers.registerNewUser(msg.chat.id, userID)) {
-        await bot.sendMessage(msg.chat.id, messages.errorUserRegistrationMessage);
-        return -1;
+    try {
+        await controllers.registerNewUser(msg.chat.id, userID);
+        await bot.sendMessage(msg.chat.id, messages.successfulUserRegistrationMessage);
+    } catch (err) {
+        if(err.message === "No user") {
+            console.log(err.message);
+            await bot.sendMessage(msg.chat.id, messages.errorUserRegistrationMessage);
+        }
+        else if (err.message === "User already exists") {
+            await bot.sendMessage(msg.chat.id, messages.userAlreadyInTheWatchListMessage);
+        }
+        else
+            await bot.sendMessage(msg.chat.id, messages.genericErrorMessage);
     }
-    await bot.sendMessage(msg.chat.id, messages.successfulUserRegistrationMessage);
 });
 
 bot.onText(/\/view/, async (msg) => {
     const namesArray = await controllers.fetchUsers(msg.chat.id);
-    var namesStr = "Persons inside your watch list:\n";
-    for(var i = 0; i < namesArray.length; i++) {
+    if(!namesArray) {
+        await bot.sendMessage(msg.chat.id, messages.noUsersInWatchListMessage);
+        return -1;
+    }
+    let namesStr = "Persons inside your watch list:\n";
+    for(let i = 0; i < namesArray.length; i++) {
         namesStr += (namesArray[i] + "\n");
     }
     await bot.sendMessage(msg.chat.id, namesStr);
@@ -65,11 +82,16 @@ bot.onText(/\/view/, async (msg) => {
 bot.onText(/\/remove (.+) (.+)/, async (msg, match) => {
    const first_name = match[1];
    const last_name = match[2];
-   await controllers.deleteExistingUser(msg.from.id, first_name, last_name);
-   await bot.sendMessage(msg.chat.id, messages.successfulUserRemovalMessage);
+   try {
+       await controllers.deleteExistingUser(msg.from.id, first_name, last_name);
+       await bot.sendMessage(msg.chat.id, messages.successfulUserRemovalMessage);
+   } catch(err) {
+       if(err.message === 'No user')
+           await bot.sendMessage(msg.chat.id, messages.noUserToDeleteMessage);
+       else
+           await bot.sendMessage(msg.chat.id, messages.genericErrorMessage);
+   }
 });
-
-
 
 setInterval(async () => {
     await controllers.checkForUpdates(onlineNotification);
@@ -81,6 +103,6 @@ const onlineNotification = async (chatID, userName) => {
 
 setInterval(async () => {
     const resp = await axios.get("https://vk-online-bot.herokuapp.com/");
-    console.log("Requesting server: ");
+    console.log("requesting server for anti shutdown by heroku");
     //console.log(resp.data);
 }, 120000);
