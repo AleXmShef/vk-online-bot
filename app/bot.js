@@ -8,7 +8,7 @@ const bot = new TelegramBot(token, {
     polling: true
 });
 
-bot.sendMessage(272562481, "Bot is now online!");
+bot.sendMessage(272562481, "Bot is now online!", messages.mainMenuKeyboard);
 
 bot.onText(/Add new person/, async (msg) => {
     await bot.sendMessage(msg.chat.id, messages.askForUserIdMessage);
@@ -28,6 +28,10 @@ bot.onText(/View your persons/, async (msg) => {
 });
 
 bot.onText(/View statistics/, async (msg) => {
+    await bot.sendMessage(msg.chat.id, messages.askForUserStatisticsMessage);
+});
+
+bot.onText(/\/statistics/, async (msg) => {
     await bot.sendMessage(msg.chat.id, messages.askForUserStatisticsMessage);
 });
 
