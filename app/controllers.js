@@ -43,7 +43,7 @@ async function deleteExistingUser(userID, first_name, last_name) {
     const user = await User.findOne({userid: userID.toString()});
     for(let i = 0; i < user.spectatedArray.length; i++) {
         if (user.spectatedArray[i].first_name === first_name && user.spectatedArray[i].last_name === last_name) {
-            user.spectatedArray[i].splice(i, 1);
+            user.spectatedArray.splice(i, 1);
             await user.save();
             break;
         }
