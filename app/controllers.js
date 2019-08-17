@@ -47,6 +47,9 @@ async function registerNewUser(curUser, targetUserLink) {
 async function deleteExistingUser(userID, first_name, last_name) {
     console.log("deleting user: " + first_name + " " + last_name);
     const user = await User.findOne({userid: userID.toString()});
+    if(!user) {
+        throw {message: 'No user'};
+    }
     let success = 0;
     for(let i = 0; i < user.spectatedArray.length; i++) {
         if (user.spectatedArray[i].first_name === first_name && user.spectatedArray[i].last_name === last_name) {
