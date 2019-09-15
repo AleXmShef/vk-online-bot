@@ -82,10 +82,10 @@ async function checkForUpdates(callback) {
                     + users[i].spectatedArray[j].last_name};
             }
             if (user.online_data.length > 5) {
-                user.online_data = user.online_data.slice(user.online_data.length - 2);
+                user.online_data = await user.online_data.slice(user.online_data.length - 2);
             }
             if (user.online_data[user.online_data.length - 1].is_online !== vkUser.online) {
-                user.online_data.push({'time': Date.now(), 'is_online': vkUser.online});
+                await user.online_data.push({'time': Date.now(), 'is_online': vkUser.online});
                 if (vkUser.online) {
                     console.log("Sending online notification, user online: " + vkUser.first_name + " " + vkUser.last_name);
                     await callback(users[i].userid, vkUser.first_name + " " + vkUser.last_name);
