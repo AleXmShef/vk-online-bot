@@ -112,7 +112,7 @@ setInterval(async () => {
         await controllers.checkForUpdates(onlineNotification);
     } catch (err) {
         if (err.message === 'No user') {
-            //do something
+            console.log("error");
         }
     }
 }, 5000);

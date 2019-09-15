@@ -65,6 +65,12 @@ async function deleteExistingUser(userID, first_name, last_name) {
     }
 }
 
+async function sleep(ms){
+    return new Promise(resolve=>{
+        setTimeout(resolve,ms)
+    })
+}
+
 async function checkForUpdates(callback) {
     const users = await User.find();
     for(let i = 0; i < users.length; i++) {
@@ -86,8 +92,8 @@ async function checkForUpdates(callback) {
                 }
             }
             users[i].spectatedArray[j] = user;
+            await sleep(500);
             await users[i].save();
-            await sleep(100);
         }
     }
 }
