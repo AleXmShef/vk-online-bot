@@ -29,9 +29,11 @@ async function GetUserId(userLink) {
 async function GetUserData(userID) {
     try {
         const user = await axios.get(`https://api.vk.com/method/users.get?user_id=${userID}&fields=online&v=5.52&access_token=${vktoken}`);
+        //console.log(user);
         return user.data.response[0];
     } catch (err) {
         console.log(`"Error during user data fetching, failed user id: ${userID}"`);
+        console.log(err);
     }
 }
 

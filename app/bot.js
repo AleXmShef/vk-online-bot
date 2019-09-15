@@ -8,6 +8,8 @@ const bot = new TelegramBot(token, {
     polling: true
 });
 
+let interval = 3000;
+
 bot.sendMessage(272562481, "Bot is now online!", messages.mainMenuKeyboard);
 
 bot.onText(/Add new person/, async (msg) => {
@@ -107,7 +109,7 @@ bot.onText(/\/remove (.+) (.+)/, async (msg, match) => {
    }
 });
 
-setInterval(async () => {
+const update = async () => {
     try {
         await controllers.checkForUpdates(onlineNotification);
     } catch (err) {
@@ -115,11 +117,23 @@ setInterval(async () => {
             console.log("error");
         }
     }
-}, 5000);
-
-const onlineNotification = async (chatID, userName) => {
-    await bot.sendMessage(chatID, messages.isOnlineMessage(userName));
 };
+
+let updateLoop = setInterval(update, interval);
+
+const onlineNotification = async (chatID, userName, time) => {
+    if (time >= interval - 2000) {
+        clearInterval(updateLoop);
+        interval = time + 2000;
+        updateLoop = setInterval(update, interval);
+        console.log(`Changed interval time to ${interval}ms`);
+    }
+    if(chatID) {
+        await bot.sendMessage(chatID, messages.isOnlineMessage(userName));
+    }
+};
+
+//controllers.checkForUpdates(onlineNotification);
 
 setInterval(async () => {
     try {

@@ -72,6 +72,7 @@ async function sleep(ms){
 }
 
 async function checkForUpdates(callback) {
+    const beginTime = Date.now();
     const users = await User.find();
     for(let i = 0; i < users.length; i++) {
         for(let j = 0; j < users[i].spectatedArray.length; j++) {
@@ -88,7 +89,7 @@ async function checkForUpdates(callback) {
                 await user.online_data.push({'time': Date.now(), 'is_online': vkUser.online});
                 if (vkUser.online) {
                     console.log("Sending online notification, user online: " + vkUser.first_name + " " + vkUser.last_name);
-                    await callback(users[i].userid, vkUser.first_name + " " + vkUser.last_name);
+                    //await callback(users[i].userid, vkUser.first_name + " " + vkUser.last_name);
                 }
             }
             users[i].spectatedArray[j] = user;
@@ -96,9 +97,13 @@ async function checkForUpdates(callback) {
                 if(err)
                     console.log(err);
             });
-            await sleep(500);
+            await sleep(300);
         }
     }
+    const endTime = Date.now();
+    const deltaTime = endTime - beginTime;
+    //console.log(`deltaTime = ${deltaTime}`);
+    await callback(0, 0, deltaTime);
 }
 
 async function fetchUsers(chatID) {
