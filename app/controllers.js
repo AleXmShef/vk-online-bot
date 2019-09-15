@@ -88,7 +88,7 @@ async function checkForUpdates(callback) {
                 user.online_data.push({'time': Date.now(), 'is_online': vkUser.online});
                 if (vkUser.online) {
                     console.log("Sending online notification, user online: " + vkUser.first_name + " " + vkUser.last_name);
-                    //await callback(users[i].userid, vkUser.first_name + " " + vkUser.last_name);
+                    await callback(users[i].userid, vkUser.first_name + " " + vkUser.last_name);
                 }
             }
             users[i].spectatedArray[j] = user;
