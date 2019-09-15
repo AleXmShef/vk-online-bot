@@ -86,7 +86,8 @@ async function checkForUpdates(callback) {
                 }
             }
             users[i].spectatedArray[j] = user;
-            users[i].save();
+            await users[i].save();
+            await sleep(100);
         }
     }
 }
