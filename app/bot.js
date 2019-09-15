@@ -8,7 +8,7 @@ const bot = new TelegramBot(token, {
     polling: true
 });
 
-let interval = 3000;
+let interval = 5000;
 
 bot.sendMessage(272562481, "Bot is now online!", messages.mainMenuKeyboard);
 
