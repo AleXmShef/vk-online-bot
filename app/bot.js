@@ -137,8 +137,8 @@ const onlineNotification = async (chatID, userName, time) => {
 
 setInterval(async () => {
     try {
-        //const resp = await axios.get("https://vk-online-bot.herokuapp.com/");
-        console.log("requesting server for anti shutdown by heroku");
+        const resp = await axios.get("https://vk-online-bot.herokuapp.com/");
+        //console.log("requesting server for anti shutdown by heroku");
     } catch (err) {
         console.error(err);
     }
