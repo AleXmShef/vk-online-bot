@@ -108,7 +108,13 @@ bot.onText(/\/remove (.+) (.+)/, async (msg, match) => {
 });
 
 setInterval(async () => {
-    await controllers.checkForUpdates(onlineNotification);
+    try {
+        await controllers.checkForUpdates(onlineNotification);
+    } catch (err) {
+        if (err.message === 'No user') {
+            //do something
+        }
+    }
 }, 5000);
 
 const onlineNotification = async (chatID, userName) => {

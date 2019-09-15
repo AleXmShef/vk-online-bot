@@ -71,6 +71,10 @@ async function checkForUpdates(callback) {
         for(let j = 0; j < users[i].spectatedArray.length; j++) {
             const user = users[i].spectatedArray[j];
             const vkUser = await services.getUserData(user.userid);
+            if(!vkUser) {
+                throw {message: 'No user', spectator: users[i].userid, spectatedName: users[i].spectatedArray[j].first_name + " "
+                    + users[i].spectatedArray[j].last_name};
+            }
             if (user.online_data.length > 5) {
                 user.online_data = user.online_data.slice(user.online_data.length - 2);
             }
