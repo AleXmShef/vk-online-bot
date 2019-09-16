@@ -96,10 +96,7 @@ async function checkForUpdates(callback) {
             //console.log(user2);
             await sleep(300);
         }
-        await users[i].save((err) => {
-            if(err)
-                console.log(err);
-        });
+        await User.updateOne({userid: users[i].userid}, {spectatedArray: users[i].spectatedArray});
         const user2 = await User.findOne({userid: users[i].userid});
         if (JSON.stringify(users[i]) !== JSON.stringify(user2)) {
             console.log(`Error saving database, failed user: ${user2.userid}`);
