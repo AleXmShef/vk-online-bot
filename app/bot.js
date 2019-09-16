@@ -124,6 +124,9 @@ const update = async () => {
         }
         running = false;
     }
+    else {
+        console.log("error, tried to start second update thread")
+    }
 };
 
 let updateLoop = setInterval(update, interval);

@@ -93,16 +93,16 @@ async function checkForUpdates(callback) {
                 }
             }
             users[i].spectatedArray[j] = user;
-            await users[i].save((err) => {
-                if(err)
-                    console.log(err);
-            });
-            const user2 = await User.findOne({userid: users[i].userid});
             //console.log(user2);
-            if (user2.spectatedArray[j].online_data[user2.spectatedArray[j].online_data.length -1].is_online !== user.online_data[user.online_data.length-1].is_online) {
-                console.log(`Failed to save database, failed user: ${user.first_name} ${user.last_name}`);
-            }
             await sleep(300);
+        }
+        await users[i].save((err) => {
+            if(err)
+                console.log(err);
+        });
+        const user2 = await User.findOne({userid: users[i].userid});
+        if (JSON.stringify(users[i]) !== JSON.stringify(user2)) {
+            console.log(`Error saving database, failed user: ${user2.userid}`);
         }
     }
     const endTime = Date.now();
