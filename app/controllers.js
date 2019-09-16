@@ -100,7 +100,7 @@ async function checkForUpdates(callback) {
             const user2 = await User.findOne({userid: users[i].userid});
             //console.log(user2);
             if (user2.spectatedArray[j].online_data[user2.spectatedArray[j].online_data.length -1].is_online !== user.online_data[user.online_data.length-1].is_online) {
-                console.log(`${user2.spectatedArray[j].online_data[user2.spectatedArray[j].online_data.length -1]} ${user.online_data[user.online_data.length-1]}`);
+                console.log(`Failed to save database, failed user: ${user.first_name} ${user.last_name}`);
             }
             await sleep(300);
         }
