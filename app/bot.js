@@ -8,7 +8,8 @@ const bot = new TelegramBot(token, {
     polling: true
 });
 
-let interval = 5000;
+let interval = 10000;
+let running = false;
 
 bot.sendMessage(272562481, "Bot is now online!", messages.mainMenuKeyboard);
 
@@ -110,12 +111,18 @@ bot.onText(/\/remove (.+) (.+)/, async (msg, match) => {
 });
 
 const update = async () => {
-    try {
-        await controllers.checkForUpdates(onlineNotification);
-    } catch (err) {
-        if (err.message === 'No user') {
-            console.log("error");
+    if(!running) {
+        running = true;
+        try {
+            await controllers.checkForUpdates(onlineNotification);
+        } catch (err) {
+            if (err.message === 'No user') {
+                console.log("error");
+            }
+            else
+                console.log(err);
         }
+        running = false;
     }
 };
 
@@ -140,7 +147,7 @@ setInterval(async () => {
         const resp = await axios.get("https://vk-online-bot.herokuapp.com/");
         //console.log("requesting server for anti shutdown by heroku");
     } catch (err) {
-        console.error(err);
+        //console.error(err);
     }
     //console.log(resp.data);
 }, 120000);

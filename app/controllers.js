@@ -97,12 +97,17 @@ async function checkForUpdates(callback) {
                 if(err)
                     console.log(err);
             });
+            const user2 = await User.findOne({userid: users[i].userid});
+            //console.log(user2);
+            if (user2.spectatedArray[j].online_data[user2.spectatedArray[j].online_data.length -1].is_online !== user.online_data[user.online_data.length-1].is_online) {
+                console.log(`${user2.spectatedArray[j].online_data[user2.spectatedArray[j].online_data.length -1]} ${user.online_data[user.online_data.length-1]}`);
+            }
             await sleep(300);
         }
     }
     const endTime = Date.now();
     const deltaTime = endTime - beginTime;
-    //console.log(`deltaTime = ${deltaTime}`);
+    console.log(`deltaTime = ${deltaTime}`);
     await callback(0, 0, deltaTime);
 }
 
