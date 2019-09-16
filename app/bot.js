@@ -112,6 +112,7 @@ bot.onText(/\/remove (.+) (.+)/, async (msg, match) => {
 
 const update = async () => {
     if(!running) {
+        console.log("starting update");
         running = true;
         try {
             await controllers.checkForUpdates(onlineNotification);
@@ -123,6 +124,7 @@ const update = async () => {
                 console.log(err);
         }
         running = false;
+        console.log("finished update");
     }
     else {
         console.log("error, tried to start second update thread")
