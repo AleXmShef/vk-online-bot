@@ -86,21 +86,16 @@ async function checkForUpdates(callback) {
                 user.online_data = await user.online_data.slice(user.online_data.length - 2);
             }
             if (user.online_data[user.online_data.length - 1].is_online !== vkUser.online) {
-                await user.online_data.push({'time': Date.now(), 'is_online': vkUser.online});
+                user.online_data.push({'time': Date.now(), 'is_online': vkUser.online});
                 if (vkUser.online) {
                     console.log("Sending online notification, user online: " + vkUser.first_name + " " + vkUser.last_name);
                     await callback(users[i].userid, vkUser.first_name + " " + vkUser.last_name);
                 }
             }
             users[i].spectatedArray[j] = user;
-            //console.log(user2);
             await sleep(300);
         }
         await User.updateOne({userid: users[i].userid}, {spectatedArray: users[i].spectatedArray});
-        const user2 = await User.findOne({userid: users[i].userid});
-        if (JSON.stringify(users[i]) !== JSON.stringify(user2)) {
-            console.log(`Error saving database, failed user: ${user2.userid}`);
-        }
     }
     const endTime = Date.now();
     const deltaTime = endTime - beginTime;
